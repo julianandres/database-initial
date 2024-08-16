@@ -5,20 +5,21 @@ exports.handler = async (event) => {
   console.log("Evento recibido: ", JSON.stringify(event));
 
   const secretsmanager = new AWS.SecretsManager();
-  const userSecretArn = process.env.USER_SECRET_ARN;
-  const rdsSecretArn = process.env.RDS_SECRET_ARN;
-
+  const userSecretArn = event.USER_SECRET_ARN;
+  const rdsSecretArn = event.RDS_SECRET_ARN;
+  const rdsURL = event.DATABASE_URL;
   try {
     // Obtener las credenciales del Secret Manager
+    console.log("Inicio  Obtener Credenciales: ", JSON.stringify(event));
     const rdsSecret = await secretsmanager.getSecretValue({ SecretId: rdsSecretArn }).promise();
     const userSecret = await secretsmanager.getSecretValue({ SecretId: userSecretArn }).promise();
-
+    console.log("FIN  Obtener Credenciales: ", rdsSecret, " ",userSecret);
     const rdsCredentials = JSON.parse(rdsSecret.SecretString);
     const userCredentials = JSON.parse(userSecret.SecretString);
-
+    console.log("INICIO CONECTAR CON AWS ") ;
     const client = new Client({
-      host: rdsCredentials.host,
-      port: rdsCredentials.port,
+      host: rdsURL,
+      port: 5432,
       user: rdsCredentials.username,
       password: rdsCredentials.password,
       database: 'postgres'
