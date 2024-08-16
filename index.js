@@ -5,9 +5,9 @@ exports.handler = async (event) => {
   console.log("Evento recibido: ", JSON.stringify(event));
 
   const secretsmanager = new AWS.SecretsManager();
-  const userSecretArn = event.USER_SECRET_ARN;
-  const rdsSecretArn = event.RDS_SECRET_ARN;
-  const rdsURL = event.DATABASE_URL;
+  const userSecretArn = process.env.USER_SECRET_ARN;
+  const rdsSecretArn =  process.env.RDS_SECRET_ARN;
+  const rdsURL =  process.env.DATABASE_URL;
   try {
     // Obtener las credenciales del Secret Manager
     console.log("Inicio  Obtener Credenciales: ", JSON.stringify(event));
