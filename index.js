@@ -10,7 +10,7 @@ exports.handler = async (event) => {
   const rdsURL =  process.env.DATABASE_URL;
   try {
     // Obtener las credenciales del Secret Manager
-    console.log("Inicio  Obtener Credenciales: ", rdsSecret, " ",userSecret);
+    console.log("Inicio  Obtener Credenciales: ", rdsSecretArn, " ",userSecretArn);
     const rdsSecret = await secretsmanager.getSecretValue({ SecretId: rdsSecretArn }).promise();
     const userSecret = await secretsmanager.getSecretValue({ SecretId: userSecretArn }).promise();
     console.log("FIN  Obtener Credenciales: ", rdsSecret, " ",userSecret);
