@@ -16,7 +16,7 @@ exports.handler = async (event) => {
     console.log("FIN  Obtener Credenciales: ", rdsSecret, " ",userSecret);
     const rdsCredentials = JSON.parse(rdsSecret.SecretString);
     const userCredentials = JSON.parse(userSecret.SecretString);
-    console.log("INICIO CONECTAR CON AWS ") ;
+    console.log("INICIO CONECTAR CON AWS ",rdsURL , rdsCredentials) ;
     const client = new Client({
       host: rdsURL,
       port: 5432,
