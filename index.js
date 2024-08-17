@@ -50,6 +50,9 @@ exports.handler = async (event) => {
 
   } catch (error) {
     console.error("Error en la función Lambda: ", error);
-    throw error;
+    return {
+        statusCode: 500,
+        body: JSON.stringify('Success!')
+      };
   }
 };
