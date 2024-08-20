@@ -41,7 +41,7 @@ exports.handler = async (event, context, callback) => {
     const createUserQuery = `CREATE USER ${userCredentials.username} WITH PASSWORD '${userCredentials.password}';`;
     const grantPrivilegesQuery = `GRANT ALL PRIVILEGES ON DATABASE foods TO ${userCredentials.username};`;
 
-    const createSchemaSQL = `CREATE SCHEMA foods.foods_scheme;`;
+    const createSchemaSQL = `CREATE SCHEMA foods_scheme;`;
     
 
     await client.query(createDbQuery);
