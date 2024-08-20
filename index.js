@@ -42,7 +42,7 @@ exports.handler = async (event, context, callback) => {
 
     await client.end();
     console.log("Conexión a la base de datos cerrada.");
-    callback("Lambda ejecutada con éxito");
+    callback(undefined,"Lambda ejecutada con éxito");
     return {
       statusCode: 200,
       body: JSON.stringify('Success!')
