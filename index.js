@@ -33,12 +33,15 @@ exports.handler = async (event, context, callback) => {
     const createUserQuery = `CREATE USER ${userCredentials.username} WITH PASSWORD '${userCredentials.password}';`;
     const grantPrivilegesQuery = `GRANT ALL PRIVILEGES ON DATABASE foods TO ${userCredentials.username};`;
 
+    const createSchemaSQL = `CREATE SCHEMA foods.foods_scheme;`;
+
     await client.query(createDbQuery);
     console.log("Base de datos 'foods' creada.");
     await client.query(createUserQuery);
     console.log(`Usuario '${userCredentials.username}' creado.`);
     await client.query(grantPrivilegesQuery);
     console.log(`Privilegios otorgados al usuario '${userCredentials.username}'.`);
+    await client.query(createSchemaSQL);
 
     await client.end();
     console.log("Conexión a la base de datos cerrada.");
