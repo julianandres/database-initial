@@ -8,6 +8,14 @@ exports.handler = async (event, context, callback) => {
   const userSecretArn = process.env.USER_SECRET_ARN;
   const rdsSecretArn =  process.env.RDS_SECRET_ARN;
   const rdsURL =  process.env.DATABASE_URL;
+  const responseBody = {
+    Status: "SUCCESS",
+    Reason: "See the details in CloudWatch Log Stream: " + context.logStreamName,
+    PhysicalResourceId: context.logStreamName,
+    StackId: event.StackId,
+    RequestId: event.RequestId,
+    LogicalResourceId: event.LogicalResourceId,
+};
   try {
     // Obtener las credenciales del Secret Manager
     console.log("Inicio  Obtener Credenciales: ", rdsSecretArn, " ",userSecretArn);
@@ -34,14 +42,7 @@ exports.handler = async (event, context, callback) => {
     const grantPrivilegesQuery = `GRANT ALL PRIVILEGES ON DATABASE foods TO ${userCredentials.username};`;
 
     const createSchemaSQL = `CREATE SCHEMA foods.foods_scheme;`;
-    const responseBody = {
-        Status: "SUCCESS",
-        Reason: "See the details in CloudWatch Log Stream: " + context.logStreamName,
-        PhysicalResourceId: context.logStreamName,
-        StackId: event.StackId,
-        RequestId: event.RequestId,
-        LogicalResourceId: event.LogicalResourceId,
-    };
+    
 
     await client.query(createDbQuery);
     console.log("Base de datos 'foods' creada.");
@@ -62,6 +63,8 @@ exports.handler = async (event, context, callback) => {
     };
 
   } catch (error) {
+    responseBody.Status= "FAILED";
+    responseBody.Reason = error.message;
     await axios.put(event.ResponseURL, responseBody);
     console.error("Error en la función Lambda: ", error);
     callback("Error al ejecutar la Lambda: " + error.message);
