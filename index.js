@@ -34,6 +34,14 @@ exports.handler = async (event, context, callback) => {
     const grantPrivilegesQuery = `GRANT ALL PRIVILEGES ON DATABASE foods TO ${userCredentials.username};`;
 
     const createSchemaSQL = `CREATE SCHEMA foods.foods_scheme;`;
+    const responseBody = {
+        Status: "SUCCESS",
+        Reason: "See the details in CloudWatch Log Stream: " + context.logStreamName,
+        PhysicalResourceId: context.logStreamName,
+        StackId: event.StackId,
+        RequestId: event.RequestId,
+        LogicalResourceId: event.LogicalResourceId,
+    };
 
     await client.query(createDbQuery);
     console.log("Base de datos 'foods' creada.");
@@ -45,6 +53,7 @@ exports.handler = async (event, context, callback) => {
 
     await client.end();
     console.log("Conexión a la base de datos cerrada.");
+    await axios.put(event.ResponseURL, responseBody);
     context.succeed("Lambda ejecutada con éxito");
     callback(undefined,"Lambda ejecutada con éxito");
     return {
@@ -53,6 +62,7 @@ exports.handler = async (event, context, callback) => {
     };
 
   } catch (error) {
+    await axios.put(event.ResponseURL, responseBody);
     console.error("Error en la función Lambda: ", error);
     callback("Error al ejecutar la Lambda: " + error.message);
     context.fail("Error al ejecutar la Lambda: " + error.message);
