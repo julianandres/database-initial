@@ -1,7 +1,7 @@
 const { Client } = require('pg');
 const AWS = require('aws-sdk');
 
-exports.handler = async (event) => {
+exports.handler = async (event, context, callback) => {
   console.log("Evento recibido: ", JSON.stringify(event));
 
   const secretsmanager = new AWS.SecretsManager();
@@ -42,7 +42,7 @@ exports.handler = async (event) => {
 
     await client.end();
     console.log("Conexión a la base de datos cerrada.");
-
+    callback("Lambda ejecutada con éxito");
     return {
       statusCode: 200,
       body: JSON.stringify('Success!')
@@ -50,6 +50,7 @@ exports.handler = async (event) => {
 
   } catch (error) {
     console.error("Error en la función Lambda: ", error);
+    callback("Error al ejecutar la Lambda: " + error.message);
     return {
         statusCode: 500,
         body: JSON.stringify('Success!')
