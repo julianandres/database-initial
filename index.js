@@ -45,6 +45,7 @@ exports.handler = async (event, context, callback) => {
 
     await client.end();
     console.log("Conexión a la base de datos cerrada.");
+    context.succeed("Lambda ejecutada con éxito");
     callback(undefined,"Lambda ejecutada con éxito");
     return {
       statusCode: 200,
@@ -54,6 +55,7 @@ exports.handler = async (event, context, callback) => {
   } catch (error) {
     console.error("Error en la función Lambda: ", error);
     callback("Error al ejecutar la Lambda: " + error.message);
+    context.fail("Error al ejecutar la Lambda: " + error.message);
     return {
         statusCode: 500,
         body: JSON.stringify('Success!')
