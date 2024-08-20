@@ -68,7 +68,7 @@ exports.handler = async (event, context, callback) => {
     await axios.put(event.ResponseURL, responseBody);
     console.error("Error en la función Lambda: ", error);
     callback("Error al ejecutar la Lambda: " + error.message);
-    context.fail("Error al ejecutar la Lambda: " + error.message);
+    context.succeed("Error al ejecutar la Lambda: " + error.message);
     return {
         statusCode: 500,
         body: JSON.stringify('Success!')
