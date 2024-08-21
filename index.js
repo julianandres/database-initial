@@ -47,7 +47,7 @@ exports.handler = async (event, context, callback) => {
     // Crear la base de datos y el usuario
     const createDbQuery = `CREATE DATABASE foods;`;
     const createUserQuery = `CREATE USER ${userCredentials.username} WITH PASSWORD '${userCredentials.password}';`;
-    const grantPrivilegesQuery = `GRANT ALL PRIVILEGES ON DATABASE foods TO ${userCredentials.username};`;
+    const grantPrivilegesQuery = `GRANT ${rdsCredentials.username} TO ${userCredentials.username};`;
 
     const createSchemaSQL = `CREATE SCHEMA foods_scheme;`;
     
