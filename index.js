@@ -33,6 +33,14 @@ exports.handler = async (event, context, callback) => {
       database: 'postgres'
     });
 
+    const clientScheme = new Client({
+        host: rdsURL,
+        port: 5432,
+        user: rdsCredentials.username,
+        password: rdsCredentials.password,
+        database: 'foods'
+      });
+
     await client.connect();
     console.log("Conectado a la base de datos");
 
@@ -50,9 +58,11 @@ exports.handler = async (event, context, callback) => {
     console.log(`Usuario '${userCredentials.username}' creado.`);
     await client.query(grantPrivilegesQuery);
     console.log(`Privilegios otorgados al usuario '${userCredentials.username}'.`);
-    await client.query(createSchemaSQL);
-
     await client.end();
+    await clientScheme.connect();
+    await clientScheme.query(createSchemaSQL);
+    await clientScheme.end();
+    
     console.log("Conexión a la base de datos cerrada.");
     await axios.put(event.ResponseURL, responseBody);
     context.succeed("Lambda ejecutada con éxito");
